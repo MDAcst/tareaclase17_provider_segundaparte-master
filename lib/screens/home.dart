@@ -11,37 +11,40 @@ class Home extends StatelessWidget {
   const Home({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profesores'),
-        backgroundColor: Colors.orange,
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.person),
-        backgroundColor: Colors.purple[800],
-        onPressed: () =>
+    return RefreshIndicator(
+        onRefresh: () =>
             Provider.of<UsuarioProvider>(context, listen: false).getUserData(),
-      ),
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Consumer<UsuarioProvider>(
-          builder: (BuildContext context, data, _) {
-            if (data.estaCargandoDatos) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (data.usuarios.isEmpty) {
-              return const Center(
-                child: Text('Lista vacia'),
-              );
-            }
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Profesores'),
+            backgroundColor: Colors.orange,
+          ),
+          //floatingActionButton: FloatingActionButton(
+          //child: const Icon(Icons.person),
+          //backgroundColor: Colors.purple[800],
+          //onPressed: () =>
+          //Provider.of<UsuarioProvider>(context, listen: false).getUserData(),
+          //),
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: Consumer<UsuarioProvider>(
+              builder: (BuildContext context, data, _) {
+                if (data.estaCargandoDatos) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (data.usuarios.isEmpty) {
+                  return const Center(
+                    child: Text('Lista vacia'),
+                  );
+                }
 
-            return ListView(
-              children: crearListadoDeUsuarios(data.usuarios, context),
-            );
-          },
-        ),
-      ),
-    );
+                return ListView(
+                  children: crearListadoDeUsuarios(data.usuarios, context),
+                );
+              },
+            ),
+          ),
+        ));
   }
 
   List<Widget> crearListadoDeUsuarios(List<User> usuarios, context) {
